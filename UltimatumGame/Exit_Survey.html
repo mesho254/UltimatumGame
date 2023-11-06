@@ -1,0 +1,22 @@
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.capital_city.label_tag }}
+    {{ form.capital_city|as_crispy_field }}
+
+    {{ form.math_question.label_tag }}
+    {{ form.math_question|as_crispy_field }}
+
+    {{ form.population.label_tag }}
+    {{ form.population|as_crispy_field }}
+
+    <button type="submit">Submit</button>
+</form>
+
+<p>{{ capital_city_text }}</p>
+<p>{{ math_question_text }}</p>
+<p>{{ population_text }}</p>
+
+{% endblock %}
+
