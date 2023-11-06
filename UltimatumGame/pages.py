@@ -1,6 +1,7 @@
 from otree.api import Currency as c, currency_range
 from ._builtin import Page, WaitPage
 from .models import Player1, Player2, Player3
+from otree.forms import Form
 
 
 class SendAmount(Page):
@@ -12,16 +13,32 @@ class SendAmount(Page):
 
     def vars_for_template(self):
         if self.player.id_in_group == 1:
-            # Example use of the model to update the endowment
             player1 = self.player
-            player1.endowment = c(200)  # Setting the endowment through the model
-            player1.save()  # Saving the updated endowment
-        return {}
+            player1.endowment = c(200)
+            player1.save()
+        return {
+            "form": Form(),
+        }
 
     def before_next_page(self):
         if self.player.id_in_group == 1:
             if self.player.sent_amount > self.player.endowment:
                 self.player.sent_amount = self.player.endowment
+
+
+class MyPage(Page):
+    def is_displayed(self):
+        return self.player.id_in_group == 1
+
+    def vars_for_template(self):
+        # Your template context data
+        return {
+            "key1": "value1",
+            "key2": "value2",
+        }
+
+    def before_next_page(self):
+        self.player.payoff = self.player.payoff * 2
 
 
 class WaitForAmount(Page):
@@ -103,6 +120,7 @@ class ExitSurvey(Page):
 
 
 page_sequence = [
+    MyPage,
     SendAmount,
     WaitForAmount,
     PunishOrNot,
